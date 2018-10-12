@@ -34,6 +34,26 @@ namespace Splendor
         private int nbDiamand;
         private int nbSaphir;
 
+        private string Player1 = "";
+
+        //nb rubis dans la banque
+        private int BankRubis = 4;
+        private int BankOnyx = 7;
+        private int BankEmeraude = 7;
+        private int BankDiamand = 7;
+        private int BankSaphir = 7;
+
+
+        //nb coin choisi
+        private int ChoiceRubis = 0;
+        private int ChoiceOnyx = 0;
+        private int ChoiceEmeraude = 0;
+        private int ChoiceDiamand = 0;
+        private int ChoiceSaphir = 0;
+
+        private int nbPierrePrises = 0;
+
+
         //id of the player that is playing
         private int currentPlayerId;
         //boolean to enable us to know if the user can click on a coin or a card
@@ -61,8 +81,10 @@ namespace Splendor
             lblDiamandCoin.Text = "7";
             lblEmeraudeCoin.Text = "7" ;
             lblOnyxCoin.Text = "7";
-            lblRubisCoin.Text = "7";
+            lblRubisCoin.Text = "4";
             lblSaphirCoin.Text = "7";
+
+
 
             conn = new ConnectionDB();
 
@@ -105,9 +127,11 @@ namespace Splendor
             cmdValidateChoice.Visible = false;
             cmdNextPlayer.Visible = false;
 
-            //we wire the click on all cards to the same event
-            //TO DO for all cards
-            txtLevel11.Click += ClickOnCard;
+            
+
+        //we wire the click on all cards to the same event
+        //TO DO for all cards
+        txtLevel11.Click += ClickOnCard;
         }
 
         private void ClickOnCard(object sender, EventArgs e)
@@ -124,6 +148,7 @@ namespace Splendor
         /// <param name="e"></param>
         private void cmdPlay_Click(object sender, EventArgs e)
         {
+            tour();
             this.Width = 680;
             this.Height = 780;
 
@@ -178,6 +203,19 @@ namespace Splendor
             cmdPlay.Enabled = false;
         }
 
+        void tour()
+        {
+            if (ChoiceRubis < 2 || ChoiceOnyx < 2 || ChoiceEmeraude < 2 || ChoiceDiamand < 2 || ChoiceSaphir < 2 || nbPierrePrises < 3)
+            {
+                enableClicLabel = true;
+            }
+            else
+            {
+                enableClicLabel = false;
+            }
+
+        }
+
         /// <summary>
         /// click on the red coin (rubis) to tell the player has selected this coin
         /// </summary>
@@ -185,14 +223,23 @@ namespace Splendor
         /// <param name="e"></param>
         private void lblRubisCoin_Click(object sender, EventArgs e)
         {
-            if (enableClicLabel)
+            tour();
+            nbPierrePrises++;
+            if (BankRubis < 5 && ChoiceRubis == 1)
             {
-                cmdValidateChoice.Visible = true;
-                lblChoiceRubis.Visible = true;
-                //TO DO check if possible to choose a coin, update the number of available coin
-                nbRubis++;
-                lblChoiceRubis.Text = nbRubis + "\r\n";
+                MessageBox.Show("Vous ne pouvez pas en prendre plus"); 
             }
+            else
+            {
+                if (enableClicLabel)
+                {
+                    BankRubis--;
+                    ChoiceRubis++;
+                    nbRubis++;
+                    lblRubisCoin.Text = BankRubis.ToString();
+                }
+            }
+
         }
 
         /// <summary>
@@ -222,8 +269,8 @@ namespace Splendor
         /// <param name="e"></param>
         private void lblEmeraudeCoin_Click(object sender, EventArgs e)
         {
-
             
+
         }
 
         /// <summary>
@@ -233,7 +280,38 @@ namespace Splendor
         /// <param name="e"></param>
         private void lblDiamandCoin_Click(object sender, EventArgs e)
         {
-            
+            nbPierrePrises++;
+            if (nbPierrePrises > 4)
+            {
+                enableClicLabel = false;
+            }
+            if (enableClicLabel)
+            {
+                cmdValidateChoice.Visible = true;
+                lblChoiceRubis.Visible = true;
+                ChoiceRubis++;
+                if (ChoiceRubis <= 2)
+                {
+
+                    if (BankRubis >= 1)
+                    {
+                        BankRubis--;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Il n y a plus de rubis");
+                    }
+
+                    lblRubisCoin.Text = BankRubis.ToString();
+                    //TO DO check if possible to choose a coin, update the number of available coin
+                    nbRubis++;
+                    lblChoiceRubis.Text = nbRubis + "\r\n";
+                }
+                else
+                {
+                    enableClicLabel = false;
+                }
+            }
         }
 
         /// <summary>
@@ -247,6 +325,7 @@ namespace Splendor
             //TO DO Check if card or coins are selected, impossible to do both at the same time
             
             cmdNextPlayer.Enabled = true;
+            
         }
 
         /// <summary>
@@ -256,8 +335,16 @@ namespace Splendor
         /// <param name="e"></param>
         private void cmdInsertPlayer_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("A implémenter");
+
+            //Premier joueur
+            Player1 = txtPlayer.Text; 
+            //Deuxième joueur
+
+            //troisième joueur
+
+            //quatrième joueur
         }
+        
 
         /// <summary>
         /// click on the next player to tell him it is his turn
@@ -266,12 +353,29 @@ namespace Splendor
         /// <param name="e"></param>
         private void cmdNextPlayer_Click(object sender, EventArgs e)
         {
-            //TO DO in release 1.0 : 3 is hard coded (number of players for the game), it shouldn't. 
-            //TO DO Get the id of the player : in release 0.1 there are only 3 players
-            //Reload the data of the player
-            //We are not allowed to click on the next button
             
-        }
+      
+
+
+
+
+
+
+
+
+
+
+
+        //TO DO in release 1.0 : 3 is hard coded (number of players for the game), it shouldn't. 
+        //TO DO Get the id of the player : in release 0.1 there are only 3 players
+        //Reload the data of the player
+        //We are not allowed to click on the next button
 
     }
+
+
+
+
+
+}
 }
