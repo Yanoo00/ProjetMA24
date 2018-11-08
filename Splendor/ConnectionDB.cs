@@ -4,73 +4,111 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
+using System.Data;
 
 namespace Splendor
 {
     /// <summary>
-    /// contains methods and attributes to connect and deal with the database
-    /// TO DO : le modèle de données n'est pas super, à revoir!!!!
+    /// Contains methods and attributes to connect and deal with the database.
+    /// All of SQL requests is writed into this class.
     /// </summary>
     class ConnectionDB
     {
         //connection to the database
-        private SQLiteConnection m_dbConnection; 
+        private SQLiteConnection m_dbConnection;
 
         /// <summary>
         /// constructor : creates the connection to the database SQLite
         /// </summary>
+        #region Connection DB
         public ConnectionDB()
         {
-
+            //create a sqlite file "Splendor.sqlite"
             SQLiteConnection.CreateFile("Splendor.sqlite");
             
+            //connect to database
             m_dbConnection = new SQLiteConnection("Data Source=Splendor.sqlite;Version=3;");
             m_dbConnection.Open();
 
-            //create and insert players
+            //create and insert players to database
             CreateInsertPlayer();
-            //Create and insert cards
-            //TO DO
+            //Create and insert cards to database
             CreateInsertCards();
             //Create and insert ressources
-            //TO DO
             CreateInsertRessources();
         }
-
+        #endregion Connection DB
 
         /// <summary>
         /// get the list of cards according to the level
         /// </summary>
         /// <returns>cards stack</returns>
+        #region list of cards
         public Stack<Card> GetListCardAccordingToLevel(int level)
         {
-            //Get all the data from card table selecting them according to the data
-            //TO DO
-            //Create an object "Stack of Card"
-            Stack<Card> listCard = new Stack<Card>();
-            //do while to go to every record of the card table
-            //while (....)
-            //{
-                //Get the ressourceid and the number of prestige points
-                //Create a card object
-                
-                //select the cost of the card : look at the cost table (and other)
-                
-                //do while to go to every record of the card table
-                //while (....)
-                //{
-                    //get the nbRessource of the cost
-                //}
-                //push card into the stack
-                
-            //}
-            return listCard;
-        }
+            //initialise a list of Cards
+            List<Card> listOfCards = new List<Card>();
 
+            //get all the data from card table selecting them according to the data
+            string sql = "SELECT * FROM Cards"; //set sql request
+            SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection); //set command
+            SQLiteDataReader reader = command.ExecuteReader(); //execute and read some data from Card of the database
+            /*
+            while (reader.Read()) //while it has something to read, execute the while loop
+            {
+                int fkResource = (int)reader["fkResource"];     //get fkResource of the current line
+                int lvl = (int)reader["level"];                 //get lvl of the current line
+                int nbPtPrestige = (int)reader["nbPtPrestige"]; //get nbPtPrestige of the current line
+                int fkPlayer = (int)reader["fkPlayer"];         //getfkPlayer of the current line
+
+                Card card = new Card();                         //set a new object card
+                card.PrestigePt = nbPtPrestige;                 //set PrestigePt of the new card
+                card.Level = lvl;                               //set Level of the new card
+                card.Ress = (Ressources)fkResource-1;           //set ressouce of the new card
+
+                listOfCards.Add(card);                          //add new object card into listOfCards
+            }
+            */
+            reader.Close();     //close database connexion
+
+            //Create an object "Stack of Card"
+            Stack<Card> stackCard = new Stack<Card>();
+            //do while to go to every record of the card table
+            int i = 0;
+            while (i < listOfCards.Count)
+            {
+                /*
+                //Get the ressourceid and the number of prestige points
+                sql = "SELECT fkRessource, nbPtPrestige FROM Card WHERE idCard = " + i + ";";
+                SQLiteDataReader reader2 = command.ExecuteReader();
+                Create a card object
+                Card card = new Card();
+                */
+
+                Card card = listOfCards[i];
+                //select the cost of the card : look at the cost table (and other)
+                sql = "SELECT Cost.nbRessource, Cost.fkCard FROM Cost LEFT JOIN Cards ON Cost.fkCard = Cards.idCard;";
+                SQLiteCommand command2 = new SQLiteCommand(sql, m_dbConnection);
+                SQLiteDataReader reader2 = command.ExecuteReader();
+
+                //do while to go to every record of the card table
+                while (reader2.Read())
+                {  
+                    //get the nbRessource of the cost 
+
+                }
+                reader2.Close();
+                //push card into the stack
+                stackCard.Push(card);
+            }
+            return stackCard; //return all of the stackCard
+        }
+        #endregion list of cards
 
         /// <summary>
         /// create the "player" table and insert data
         /// </summary>
+        #region Create Player
         private void CreateInsertPlayer()
         {
             string sql = "CREATE TABLE player (id INT PRIMARY KEY, pseudo VARCHAR(20))";
@@ -88,13 +126,14 @@ namespace Splendor
             command = new SQLiteCommand(sql, m_dbConnection);
             command.ExecuteNonQuery();
         }
+        #endregion Create Player
 
-        
         /// <summary>
         /// get the name of the player according to his id
         /// </summary>
         /// <param name="id">id of the player</param>
         /// <returns></returns>
+        #region Get Player Name
         public string GetPlayerName(int id)
         {
             string sql = "select pseudo from player where id = " + id;
@@ -107,10 +146,12 @@ namespace Splendor
             }
             return name;
         }
+        #endregion Get Player Name
 
         /// <summary>
         /// create the table "ressources" and insert data
         /// </summary>
+        #region Create Ressources
         private void CreateInsertRessources()
         {
             /*
@@ -149,18 +190,22 @@ namespace Splendor
             }
 
         }
+        #endregion Create Ressources
+
 
         /// <summary>
         ///  create tables NbCoin, "Cards", "Cost" and insert data
         /// </summary>
+        #region Create Cards
         private void CreateInsertCards()
         {
 
             //NbCoin
-
+            //Create a table NbCoin
             string sql = "CREATE TABLE NbCoin (idNbCoin INT PRIMARY KEY, fkPlayer INT, fkRessource INT, nbCoin INT, FOREIGN KEY (fkPlayer) REFERENCES player(id), FOREIGN KEY (fkRessource) REFERENCES Ressource(idRessource))";
             SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
             command.ExecuteNonQuery();
+            //All of requests to execute into database
             //Data
             sql = "INSERT INTO NbCoin (idNbCoin, fkPlayer, fkRessource, nbCoin) VALUES (0, 0, 0, 0)";
             command = new SQLiteCommand(sql, m_dbConnection);
@@ -225,7 +270,6 @@ namespace Splendor
 
 
             //Card
-
             sql = "CREATE TABLE Cards (idCard INT PRIMARY KEY, fkRessource INT, level INT, nbPtPrestige INT, fkPlayer INT, FOREIGN KEY (fkRessource) REFERENCES Ressource(idRessource), FOREIGN KEY (fkPlayer) REFERENCES player(id))";
             command = new SQLiteCommand(sql, m_dbConnection);
             command.ExecuteNonQuery();
@@ -533,8 +577,7 @@ namespace Splendor
 
 
             //Cost
-
-            sql = "CREATE TABLE Cost (idCost INT PRIMARY KEY, fkCard INT, fkRessource INT, nbRessource INT, FOREIGN KEY (fkCard) REFERENCES Card(IDCard), FOREIGN KEY (fkRessource) REFERENCES Ressource(idRessource))";
+            sql = "CREATE TABLE Cost (idCost INT IDENTITY(1,1) PRIMARY KEY, fkCard INT, fkRessource INT, nbRessource INT, FOREIGN KEY (fkCard) REFERENCES Card(IDCard), FOREIGN KEY (fkRessource) REFERENCES Ressource(idRessource))";
             command = new SQLiteCommand(sql, m_dbConnection);
             command.ExecuteNonQuery();
             
@@ -1051,6 +1094,6 @@ namespace Splendor
             sql = "insert into cost (fkCard, fkRessource, nbRessource) values (501, 5, 0)"; command = new SQLiteCommand(sql, m_dbConnection); command.ExecuteNonQuery();
 
         }
-
+        #endregion Create Cards
     }
 }

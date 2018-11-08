@@ -58,11 +58,11 @@ namespace Splendor
         {
             lblGoldCoin.Text = "5";
 
-            lblDiamandCoin.Text = "7";
-            lblEmeraudeCoin.Text = "7" ;
-            lblOnyxCoin.Text = "7";
-            lblRubisCoin.Text = "7";
-            lblSaphirCoin.Text = "7";
+            lblDiamandCoin.Text = "0";
+            lblEmeraudeCoin.Text = "0" ;
+            lblOnyxCoin.Text = "0";
+            lblRubisCoin.Text = "0";
+            lblSaphirCoin.Text = "0";
 
             conn = new ConnectionDB();
 
