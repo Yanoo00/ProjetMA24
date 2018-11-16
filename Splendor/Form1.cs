@@ -56,13 +56,14 @@ namespace Splendor
         /// <param name="e"></param>
         private void frmSplendor_Load(object sender, EventArgs e)
         {
+            //Permet d'afficher les nombres de coins
             lblGoldCoin.Text = "5";
 
             lblDiamandCoin.Text = "0";
-            lblEmeraudeCoin.Text = "0" ;
-            lblOnyxCoin.Text = "0";
-            lblRubisCoin.Text = "0";
-            lblSaphirCoin.Text = "0";
+            lblEmeraudeCoin.Text = "1" ;
+            lblOnyxCoin.Text = "2";
+            lblRubisCoin.Text = "3";
+            lblSaphirCoin.Text = "4";
 
             conn = new ConnectionDB();
 
@@ -70,6 +71,9 @@ namespace Splendor
             //they are not hard coded any more
             //TO DO
 
+            //permet de mettre des cartes sur le plateau
+           
+            
             Card card11 = new Card();
             card11.Level = 1;
             card11.PrestigePt = 1;
@@ -82,8 +86,80 @@ namespace Splendor
             card12.Cout = new int[] { 0, 1, 2, 1, 0 };
             card12.Ress = Ressources.Saphir;
 
+            Card card13 = new Card();
+            card13.Level = 1;
+            card13.PrestigePt = 1;
+            card13.Cout = new int[] { 1, 0, 2, 0, 2 };
+            card13.Ress = Ressources.Saphir;
+
+            Card card14 = new Card();
+            card14.Level = 1;
+            card14.PrestigePt = 1;
+            card14.Cout = new int[] { 1, 0, 2, 0, 2 };
+            card14.Ress = Ressources.Saphir;
+
+            Card card21 = new Card();
+            card21.Level = 1;
+            card21.PrestigePt = 1;
+            card21.Cout = new int[] { 1, 0, 2, 0, 2 };
+            card21.Ress = Ressources.Rubis;
+
+            Card card22 = new Card();
+            card22.Level = 1;
+            card22.PrestigePt = 1;
+            card22.Cout = new int[] { 1, 0, 2, 0, 2 };
+            card22.Ress = Ressources.Diamant;
+
+            Card card23 = new Card();
+            card23.Level = 1;
+            card23.PrestigePt = 1;
+            card23.Cout = new int[] { 1, 0, 2, 0, 2 };
+            card23.Ress = Ressources.Diamant;
+
+            Card card24 = new Card();
+            card24.Level = 1;
+            card24.PrestigePt = 1;
+            card24.Cout = new int[] { 1, 0, 2, 0, 2 };
+            card24.Ress = Ressources.Onyx;
+
+            Card card31 = new Card();
+            card31.Level = 1;
+            card31.PrestigePt = 1;
+            card31.Cout = new int[] { 1, 0, 2, 0, 2 };
+            card31.Ress = Ressources.Onyx;
+
+            Card card32 = new Card();
+            card32.Level = 1;
+            card32.PrestigePt = 1;
+            card32.Cout = new int[] { 1, 0, 2, 0, 2 };
+            card32.Ress = Ressources.Rubis;
+
+            Card card33 = new Card();
+            card33.Level = 2;
+            card33.PrestigePt = 5;
+            card33.Cout = new int[] { 3, 1, 0, 0, 2 };
+            card33.Ress = Ressources.Emeraude;
+
+            Card card34 = new Card();
+            card34.Level = 1;
+            card34.PrestigePt = 3;
+            card34.Cout = new int[] { 1, 0, 2, 0, 2 };
+            card34.Ress = Ressources.Saphir;
+
+
+            //affiche les objets dans les cases
             txtLevel11.Text = card11.ToString();
             txtLevel12.Text = card12.ToString();
+            txtLevel13.Text = card13.ToString();
+            txtLevel14.Text = card14.ToString();
+            txtLevel21.Text = card21.ToString();
+            txtLevel22.Text = card22.ToString();
+            txtLevel23.Text = card23.ToString();
+            txtLevel24.Text = card24.ToString();
+            txtLevel31.Text = card31.ToString();
+            txtLevel32.Text = card32.ToString();
+            txtLevel33.Text = card33.ToString();
+            txtLevel34.Text = card34.ToString();
 
             //load cards from the database
             Stack<Card> listCardOne = conn.GetListCardAccordingToLevel(1);
