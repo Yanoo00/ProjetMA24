@@ -5,7 +5,7 @@
  * \date      August 22. 2018
  * \brief     Form to play.
  *
- * \details   This form enables to choose coins or cards to get ressources (precious stones) and prestige points 
+ * \details   This form enables to choose coins or cards to get ressources (precious stones) and prestige points
  * to add and to play with other players
  */
 
@@ -37,7 +37,7 @@ namespace Splendor
         private string Player1 = "";
 
         //nb rubis dans la banque
-        private int BankRubis = 4;
+        private int BankRubis = 7;
         private int BankOnyx = 7;
         private int BankEmeraude = 7;
         private int BankDiamand = 7;
@@ -79,9 +79,9 @@ namespace Splendor
             lblGoldCoin.Text = "5";
 
             lblDiamandCoin.Text = "7";
-            lblEmeraudeCoin.Text = "7" ;
+            lblEmeraudeCoin.Text = "7";
             lblOnyxCoin.Text = "7";
-            lblRubisCoin.Text = "4";
+            lblRubisCoin.Text = "7";
             lblSaphirCoin.Text = "7";
 
 
@@ -111,7 +111,7 @@ namespace Splendor
             Stack<Card> listCardOne = conn.GetListCardAccordingToLevel(1);
             //Go through the results
             //Don't forget to check when you are at the end of the stack
-            
+
             //fin TO DO
 
             this.Width = 680;
@@ -127,11 +127,11 @@ namespace Splendor
             cmdValidateChoice.Visible = false;
             cmdNextPlayer.Visible = false;
 
-            
 
-        //we wire the click on all cards to the same event
-        //TO DO for all cards
-        txtLevel11.Click += ClickOnCard;
+
+            //we wire the click on all cards to the same event
+            //TO DO for all cards
+            txtLevel11.Click += ClickOnCard;
         }
 
         private void ClickOnCard(object sender, EventArgs e)
@@ -148,12 +148,12 @@ namespace Splendor
         /// <param name="e"></param>
         private void cmdPlay_Click(object sender, EventArgs e)
         {
-            tour();
+
             this.Width = 680;
             this.Height = 780;
 
             int id = 0;
-           
+
             LoadPlayer(id);
 
         }
@@ -163,7 +163,8 @@ namespace Splendor
         /// load data about the current player
         /// </summary>
         /// <param name="id">identifier of the player</param>
-        private void LoadPlayer(int id) { 
+        private void LoadPlayer(int id)
+        {
 
             enableClicLabel = true;
 
@@ -205,14 +206,32 @@ namespace Splendor
 
         void tour()
         {
-            if (ChoiceRubis < 2 || ChoiceOnyx < 2 || ChoiceEmeraude < 2 || ChoiceDiamand < 2 || ChoiceSaphir < 2 || nbPierrePrises < 3)
+            nbPierrePrises++;
+            if (enableClicLabel == true)
             {
-                enableClicLabel = true;
+                if (nbPierrePrises <= 3)
+                {
+                    if (ChoiceRubis < 2 || ChoiceOnyx < 2 || ChoiceEmeraude < 2 || ChoiceDiamand < 2 || ChoiceSaphir < 2 || nbPierrePrises < 3)
+                    {
+                        enableClicLabel = true;
+                    }
+                    else
+                    {
+                        enableClicLabel = false;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Vous ne pouvez pas en prendre plus");
+                }
             }
             else
             {
-                enableClicLabel = false;
+                MessageBox.Show("Vous ne pouvez pas en prendre plus");
             }
+
+
+
 
         }
 
@@ -224,10 +243,10 @@ namespace Splendor
         private void lblRubisCoin_Click(object sender, EventArgs e)
         {
             tour();
-            nbPierrePrises++;
+
             if (BankRubis < 5 && ChoiceRubis == 1)
             {
-                MessageBox.Show("Vous ne pouvez pas en prendre plus"); 
+                MessageBox.Show("Vous ne pouvez pas en prendre plus");
             }
             else
             {
@@ -249,7 +268,22 @@ namespace Splendor
         /// <param name="e"></param>
         private void lblSaphirCoin_Click(object sender, EventArgs e)
         {
-            
+            tour();
+
+            if (BankSaphir < 5 && ChoiceSaphir == 1)
+            {
+                MessageBox.Show("Vous ne pouvez pas en prendre plus");
+            }
+            else
+            {
+                if (enableClicLabel)
+                {
+                    BankSaphir--;
+                    ChoiceSaphir++;
+                    nbSaphir++;
+                    lblSaphirCoin.Text = BankSaphir.ToString();
+                }
+            }
         }
 
         /// <summary>
@@ -259,7 +293,22 @@ namespace Splendor
         /// <param name="e"></param>
         private void lblOnyxCoin_Click(object sender, EventArgs e)
         {
-            
+            tour();
+
+            if (BankOnyx < 5 && ChoiceOnyx == 1)
+            {
+                MessageBox.Show("Vous ne pouvez pas en prendre plus");
+            }
+            else
+            {
+                if (enableClicLabel)
+                {
+                    BankOnyx--;
+                    ChoiceOnyx++;
+                    nbOnyx++;
+                    lblOnyxCoin.Text = BankOnyx.ToString();
+                }
+            }
         }
 
         /// <summary>
@@ -269,7 +318,22 @@ namespace Splendor
         /// <param name="e"></param>
         private void lblEmeraudeCoin_Click(object sender, EventArgs e)
         {
-            
+            tour();
+
+            if (BankEmeraude < 5 && ChoiceEmeraude == 1)
+            {
+                MessageBox.Show("Vous ne pouvez pas en prendre plus");
+            }
+            else
+            {
+                if (enableClicLabel)
+                {
+                    BankEmeraude--;
+                    ChoiceEmeraude++;
+                    nbEmeraude++;
+                    lblEmeraudeCoin.Text = BankEmeraude.ToString();
+                }
+            }
 
         }
 
@@ -323,9 +387,9 @@ namespace Splendor
         {
             cmdNextPlayer.Visible = true;
             //TO DO Check if card or coins are selected, impossible to do both at the same time
-            
+
             cmdNextPlayer.Enabled = true;
-            
+
         }
 
         /// <summary>
@@ -337,14 +401,14 @@ namespace Splendor
         {
 
             //Premier joueur
-            Player1 = txtPlayer.Text; 
+            Player1 = txtPlayer.Text;
             //Deuxième joueur
 
             //troisième joueur
 
             //quatrième joueur
         }
-        
+
 
         /// <summary>
         /// click on the next player to tell him it is his turn
@@ -353,8 +417,6 @@ namespace Splendor
         /// <param name="e"></param>
         private void cmdNextPlayer_Click(object sender, EventArgs e)
         {
-            
-      
 
 
 
@@ -366,16 +428,14 @@ namespace Splendor
 
 
 
-        //TO DO in release 1.0 : 3 is hard coded (number of players for the game), it shouldn't. 
-        //TO DO Get the id of the player : in release 0.1 there are only 3 players
-        //Reload the data of the player
-        //We are not allowed to click on the next button
+
+
+            //TO DO in release 1.0 : 3 is hard coded (number of players for the game), it shouldn't. 
+            //TO DO Get the id of the player : in release 0.1 there are only 3 players
+            //Reload the data of the player
+            //We are not allowed to click on the next button
+
+        }
 
     }
-
-
-
-
-
-}
 }
